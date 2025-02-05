@@ -1,0 +1,1 @@
+SELECT http_status_code, COUNT(http_status_code) FROM urls GROUP BY http_status_code ORDER BY COUNT(http_status_code) DESC;
