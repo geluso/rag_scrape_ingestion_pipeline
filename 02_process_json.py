@@ -3,6 +3,9 @@ import time
 import psycopg2
 import requests
 from typing import List, Tuple
+from document_payload import DocumentPayload
+import html2text
+
 
 from db import create_default_connection, get_url_200_count, get_urls_count, \
     get_one_url_to_process, insert_zip_zip_distance, count_zip_zip_distance, get_url_processed_count, \
@@ -25,19 +28,20 @@ def main():
         if row is None:
             is_processing = False
             continue
-        json_metadata, url, response = row
-        mapbox = MapBoxResponse(json_metadata, url, response)
-        zzds = mapbox.collect_zip_zip_distances()
+        metadata, url, response = row
 
-        for zzd in zzds:
-            print(zzd)
-            insert_zip_zip_distance(conn, zzd)
+        ngrok_url = "https://4cb3-2601-602-8b82-92b0-64d0-4b7b-a51a-85fb.ngrok-free.app"
+        base_url = ngrok_url
+        url_add_document = base_url + "/add_document/"
+
+        text = html2text.html2text(response)
+        print("html2text", len(text), text)
+
+        doc = DocumentPayload(url, url, text)
+        response = requests.post(url_add_document, json=doc.to_dict())
+        print(response.text)
 
         update_url_success(conn, url)
-
-        total_zzds = count_zip_zip_distance(conn)
-        print(f"{total_zzds} distances")
-        #input("[continue]")
 
 if __name__ == "__main__":
     main()

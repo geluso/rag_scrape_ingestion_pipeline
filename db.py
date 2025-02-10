@@ -5,12 +5,8 @@ import json
 
 from smc_mapbox import ZipZipDistance, ZipZipDistanceRow
 
-
 def create_default_connection():
-    return create_connection("price_sets")
-
-def create_test_connection():
-    return create_connection("price_sets_test")
+    return create_connection("texas_law")
 
 def create_connection(db_name: str):
     conn = psycopg2.connect(
@@ -90,6 +86,13 @@ def update_url_success(conn, url):
     with conn.cursor() as cur:
         cur.execute("UPDATE urls SET process_state = %s WHERE url = %s", ('SUCCESS', url.strip()))
     conn.commit()
+
+def get_all_urls(conn):
+    with conn.cursor() as cur:
+        cur.execute(
+            "SELECT json_metadata, url, response FROM urls WHERE http_status_code = 200")
+        all = cur.fetchall()
+        return all
 
 def get_one_url_to_process(conn):
     with conn.cursor() as cur:

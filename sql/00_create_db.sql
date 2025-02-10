@@ -1,8 +1,7 @@
-DROP DATABASE IF EXISTS price_sets;
-DROP DATABASE IF EXISTS price_sets_test;
-CREATE DATABASE price_sets;
+DROP DATABASE IF EXISTS texas_law;
+CREATE DATABASE texas_law;
 
-\c price_sets;
+\c texas_law;
 
 CREATE TYPE PROCESS_STATE AS ENUM ('NONE', 'FAILED', 'SUCCESS');
 
@@ -15,14 +14,4 @@ CREATE TABLE urls (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE zip_zip_distance (
-  zip_pick VARCHAR NOT NULL,
-  zip_drop VARCHAR NOT NULL,
-  PRIMARY KEY (zip_pick, zip_drop),
-  distance_meters INTEGER,
-  distance_miles REAL
-);
-
 CREATE INDEX index_urls_url ON urls (url);
-
-CREATE DATABASE price_sets_test WITH TEMPLATE price_sets;
