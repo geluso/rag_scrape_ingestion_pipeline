@@ -15,8 +15,8 @@ from db import create_default_connection, get_url_200_count, get_urls_count, \
 from smc_mapbox import MapBoxResponse
 
 TOKEN_LIMIT = 350
-BASE_URL = "http://localhost:8080/"
 BASE_URL = "https://4cb3-2601-602-8b82-92b0-64d0-4b7b-a51a-85fb.ngrok-free.app/"
+BASE_URL = "http://localhost:8080/"
 
 class TexasCode:
     def __init__(self, url):
@@ -185,7 +185,16 @@ def upload_valid_codes(codes):
     root_id = fetch_or_create_metadata(-1, "root", "Texas Statutes", "")
     print("got root")
     print("codes", len(codes))
+    skip = 77
+    count = 0
     for code in codes:
+        if count < skip:
+            print("SKIPPING COUNT:", count)
+            count += 1
+            continue
+        print("PROCESSING COUNT:", count)
+        count += 1
+
         # fetch or create code/title/subtitle/chapter/subchapter metadata
         code_id = fetch_or_create_metadata(root_id, "code", code.code, "")
         title_id = fetch_or_create_metadata(code_id, "title", code.title, "")
@@ -198,7 +207,6 @@ def upload_valid_codes(codes):
             print("section title:", section_title)
             section_id = fetch_or_create_metadata(subchapter_id, "section", section_title, "")
             for chunk in section:
-                time.sleep(1)
                 create_chunk(section_id, code.url, chunk)
         
 def main():
