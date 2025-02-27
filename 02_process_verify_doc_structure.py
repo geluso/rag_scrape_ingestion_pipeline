@@ -208,6 +208,19 @@ def upload_valid_codes(codes):
             section_id = fetch_or_create_metadata(subchapter_id, "section", section_title, "")
             for chunk in section:
                 create_chunk(section_id, code.url, chunk)
+
+def upload_invalid_codes(codes):
+    print("getting root")
+    root_id = fetch_or_create_metadata(-1, "root", "Texas Statutes", "")
+    labor_code_id = fetch_or_create_metadata(root_id, "code", "LABOR CODE", "")
+    for code in codes:
+        for section in code.code_to_section_chunks():
+            section_title = code.get_section_title(section)
+            print("section title:", section_title)
+            section_id = fetch_or_create_metadata(labor_code_id, "section", section_title, "")
+            for chunk in section:
+                time.sleep(1)
+                create_chunk(section_id, code.url, chunk)
         
 def main():
     conn = create_default_connection()
@@ -245,6 +258,7 @@ def main():
     #         print(index, len(section_chunks), section_chunks)
 
     upload_valid_codes(all_valid_codes)
+    upload_invalid_codes(all_invalid_codes)
 
 
 if __name__ == "__main__":
