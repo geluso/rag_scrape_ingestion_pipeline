@@ -19,6 +19,7 @@ def main():
     with open("./urls/texas_law/labor_urls", "r") as f:
         for line in f:
             url = line.strip()
+            print("GET", url)
             response = requests.get(url)
             text = html2text.html2text(response.text)
 
@@ -26,10 +27,12 @@ def main():
 
             chunks = text_to_chunks(text)
             chunk_index = 0
+            print("CHUNKS", len(chunks))
             for chunk in chunks:
                 # Create the chunk in the vector DB
                 doc = DocumentPayload(url, chunk, chunk_index)
                 vector_response = requests.post(url_add_document, json=doc.to_dict())
+                print("VECTOR", vector_response.status_code)
                 
                 # Create the chunk in the vercel indexed-chunks DB
                 indexed_chunk_json = {
@@ -39,11 +42,9 @@ def main():
                 }
                 vercel_response = requests.post(indexed_chunks_url, json=indexed_chunk_json)
 
-                breakpoint()
+                print("VERCEL", vercel_response.status_code)
                 chunk_index += 1
                 time.sleep(1)
-                print("vector status:", vector_response.status_code)
-                print("vercel status:", vercel_response.status_code)
 
 if __name__ == "__main__":
     main()
