@@ -2,28 +2,16 @@ from uuid import uuid4
 import json
 
 class DocumentPayload:
-    def __init__(self, title: str, url: str, text: str):
+    def __init__(self, url: str, text: str, chunk_index: int):
         self.id = str(uuid4())
-        self.title = title
         self.url = url
         self.text = text
-
-    def to_metadata(self):
-        return {
-            "id": self.id,
-            "url": self.url,
-            "title": self.title,
-        }
+        self.chunk_index = chunk_index
 
     def to_dict(self):
         return {
             "id": self.id,
             "url": self.url,
-            "title": self.title,
-            "text": self.text
+            "text": self.text,
+            "chunk_index": self.chunk_index
         }
-
-    def to_json(self):
-        jj = json.dumps(self.to_dict())
-        print("json:", jj)
-        return jj
