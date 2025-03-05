@@ -4,5 +4,4 @@ __pycache__/
 env/
 out/
 psql
-
-nothing added to commit but untracked files present (use "git add" to track)
+chroma_db*

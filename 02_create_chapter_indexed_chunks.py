@@ -16,7 +16,7 @@ ngrok_url = "https://4cb3-2601-602-8b82-92b0-64d0-4b7b-a51a-85fb.ngrok-free.app"
 indexed_chunks_url = "https://pets-to-policy-rag.vercel.app/api/indexed-chunks"
 
 def main():
-    with open("./urls/texas_law/labor_urls", "r") as f:
+    with open("./urls/texas_law/education_urls", "r") as f:
         for line in f:
             url = line.strip()
             print("GET", url)
